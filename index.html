@@ -138,6 +138,23 @@
     width:100%;text-align:left;padding:8px 12px;border-radius:8px;font-size:14px;color:var(--ink-dim);
   }
   .lang-menu button:hover,.lang-menu button.active{background:rgba(255,255,255,.06);color:var(--ink)}
+  /* Mobile language pills inside hamburger menu — hidden on desktop */
+  .lang-mobile{display:none}
+  .lang-pill{
+    display:flex;align-items:center;gap:10px;
+    width:100%;padding:12px 14px;border-radius:12px;font-size:14.5px;font-weight:600;
+    color:var(--ink-dim);text-align:left;
+    background:rgba(255,255,255,.03);border:1px solid var(--line);
+    transition:.2s;
+  }
+  .lang-pill .flag{width:22px;height:15px}
+  .lang-pill:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+  .lang-pill.active{
+    color:var(--ink);
+    background:linear-gradient(135deg,rgba(0,245,255,.12),rgba(139,92,246,.12));
+    border-color:rgba(139,92,246,.45);
+    box-shadow:0 4px 18px rgba(139,92,246,.18);
+  }
   .btn{
     display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:99px;
     font-weight:600;font-size:14.5px;transition:.2s;white-space:nowrap;
@@ -565,13 +582,20 @@
     .nav-links.open{
       display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;
       background:rgba(2,2,14,.98);backdrop-filter:blur(16px);
-      border-bottom:1px solid var(--line);padding:14px 20px;gap:4px;
+      border-bottom:1px solid var(--line);padding:14px 20px 18px;gap:4px;
+      max-height:calc(100vh - 60px);max-height:calc(100dvh - 60px);overflow-y:auto;
     }
     .nav-links.open a{padding:14px 16px;border-radius:12px;font-size:15px}
     .nav-toggle{display:inline-flex}
     .brand{margin-right:auto}
     .nav-cta{padding:10px 16px;font-size:14px}
-    .lang-btn{padding:8px 10px}
+    /* Hide desktop lang dropdown — replaced by .lang-mobile in menu */
+    .lang-switch{display:none}
+    /* Show language pills inside hamburger menu */
+    .lang-mobile{
+      display:grid;gap:6px;margin-top:12px;
+      padding-top:14px;border-top:1px solid var(--line);
+    }
     .cube-wrap{display:none}
     /* simpler 3D on tablets — perf */
     .browser{animation:none}
@@ -1017,6 +1041,11 @@
       <a href="#come" data-i18n="nav.come">Come funziona</a>
       <a href="#perche" data-i18n="nav.perche">Perché noi</a>
       <a href="#prezzi" data-i18n="nav.prezzi">Prezzi</a>
+      <div class="lang-mobile" role="group" aria-label="Lingua">
+        <button data-lang="it" class="lang-pill active"><span class="flag" data-flag="it" aria-hidden="true"></span> Italiano</button>
+        <button data-lang="en" class="lang-pill"><span class="flag" data-flag="en" aria-hidden="true"></span> English</button>
+        <button data-lang="vi" class="lang-pill"><span class="flag" data-flag="vi" aria-hidden="true"></span> Tiếng Việt</button>
+      </div>
     </nav>
     <div class="lang-switch">
       <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
@@ -1626,7 +1655,7 @@ function applyLang(lang){
   fl.classList.remove('it','en','vi');
   fl.classList.add(lang);
   document.getElementById('langCode').textContent = CODES[lang];
-  document.querySelectorAll('#langMenu button').forEach(b=>{
+  document.querySelectorAll('#langMenu button, .lang-pill').forEach(b=>{
     b.classList.toggle('active', b.dataset.lang===lang);
   });
   try{localStorage.setItem('aip_lang', lang);}catch(e){}
@@ -1645,6 +1674,13 @@ langMenu.querySelectorAll('button').forEach(b=>{
   b.addEventListener('click', ()=>{
     applyLang(b.dataset.lang);
     langMenu.classList.remove('open');
+  });
+});
+/* Mobile language pills inside hamburger menu */
+document.querySelectorAll('.lang-pill').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    applyLang(b.dataset.lang);
+    document.getElementById('navLinks').classList.remove('open');
   });
 });
 
