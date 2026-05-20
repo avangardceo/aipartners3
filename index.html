@@ -94,8 +94,24 @@
   .nav-links a:hover{color:var(--ink);background:rgba(255,255,255,.05)}
   .lang-switch{position:relative}
   .lang-btn{
-    display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:99px;
+    display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:99px;
     border:1px solid var(--line-strong);font-size:14px;font-weight:600;color:var(--ink-dim);
+  }
+  .flag{
+    display:inline-block;width:22px;height:15px;border-radius:3px;
+    background-size:cover;background-position:center;
+    box-shadow:0 0 0 1px rgba(255,255,255,.12);
+    flex-shrink:0;vertical-align:middle;
+  }
+  .lang-menu .flag{margin-right:4px}
+  .flag[data-flag="it"],.flag.it{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'><rect width='1' height='2' fill='%23009246'/><rect x='1' width='1' height='2' fill='%23fff'/><rect x='2' width='1' height='2' fill='%23ce2b37'/></svg>");
+  }
+  .flag[data-flag="en"],.flag.en{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'><clipPath id='c'><path d='M0,0 v30 h60 v-30 z'/></clipPath><clipPath id='t'><path d='M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z'/></clipPath><g clip-path='url(%23c)'><path d='M0,0 v30 h60 v-30 z' fill='%23012169'/><path d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/><path d='M0,0 L60,30 M60,0 L0,30' clip-path='url(%23t)' stroke='%23C8102E' stroke-width='4'/><path d='M30,0 v30 M0,15 h60' stroke='%23fff' stroke-width='10'/><path d='M30,0 v30 M0,15 h60' stroke='%23C8102E' stroke-width='6'/></g></svg>");
+  }
+  .flag[data-flag="vi"],.flag.vi{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'><rect width='30' height='20' fill='%23da251d'/><polygon points='15,5 16.76,10.42 22.46,10.42 17.85,13.77 19.61,19.19 15,15.83 10.39,19.19 12.15,13.77 7.54,10.42 13.24,10.42' fill='%23ffff00'/></svg>");
   }
   .lang-btn:hover{color:var(--ink);border-color:rgba(255,255,255,.25)}
   .lang-menu{
@@ -305,6 +321,7 @@
   }
   .step{
     position:relative;text-align:center;padding:0 8px;
+    transform-style:preserve-3d;
   }
   .step-n{
     position:relative;width:84px;height:84px;border-radius:50%;margin:0 auto 18px;
@@ -509,10 +526,302 @@
     .hero{padding:30px 0 50px}
     .launch-card,.contact{padding:24px}
   }
+
+  /* =============================================================
+     ============   FUTURISTIC 3D LAYER   ========================
+     ============================================================= */
+
+  /* ----- Perspective grid floor (synthwave) ----- */
+  .scene-3d{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+    perspective:600px;perspective-origin:50% 50%;
+  }
+  .grid-floor{
+    position:absolute;left:-50%;right:-50%;bottom:-30vh;height:90vh;
+    background-image:
+      linear-gradient(to right, rgba(0,245,255,.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(247,37,133,.18) 1px, transparent 1px);
+    background-size:60px 60px;
+    transform:rotateX(68deg);
+    transform-origin:50% 100%;
+    animation:gridScroll 14s linear infinite;
+    mask-image:linear-gradient(to top, #000 0%, #000 35%, transparent 95%);
+    -webkit-mask-image:linear-gradient(to top, #000 0%, #000 35%, transparent 95%);
+  }
+  .grid-floor.top{
+    top:-30vh;bottom:auto;
+    transform:rotateX(-68deg);transform-origin:50% 0%;
+    mask-image:linear-gradient(to bottom, #000 0%, #000 35%, transparent 95%);
+    -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 35%, transparent 95%);
+    background-image:
+      linear-gradient(to right, rgba(139,92,246,.16) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(6,255,165,.16) 1px, transparent 1px);
+    animation:gridScrollUp 18s linear infinite;
+  }
+  @keyframes gridScroll{from{background-position:0 0}to{background-position:0 60px}}
+  @keyframes gridScrollUp{from{background-position:0 60px}to{background-position:0 0}}
+
+  /* ----- Floating gradient orbs (mouse parallax) ----- */
+  .orbs{position:absolute;inset:0;will-change:transform}
+  .orb{
+    position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;
+    will-change:transform;
+    animation:orbFloat 16s ease-in-out infinite;
+  }
+  .orb.o1{width:540px;height:540px;top:-120px;left:-100px;
+    background:radial-gradient(circle,var(--c-cyan),transparent 70%);animation-delay:0s}
+  .orb.o2{width:620px;height:620px;top:30%;right:-180px;
+    background:radial-gradient(circle,var(--c-purple),transparent 70%);animation-delay:-4s}
+  .orb.o3{width:480px;height:480px;bottom:-120px;left:30%;
+    background:radial-gradient(circle,var(--c-pink),transparent 70%);animation-delay:-8s}
+  .orb.o4{width:380px;height:380px;top:55%;left:5%;
+    background:radial-gradient(circle,var(--c-mint),transparent 70%);opacity:.35;animation-delay:-2s}
+  @keyframes orbFloat{
+    0%,100%{transform:translate3d(0,0,0) scale(1)}
+    33%{transform:translate3d(40px,-30px,0) scale(1.08)}
+    66%{transform:translate3d(-30px,40px,0) scale(.95)}
+  }
+
+  /* ----- Star particles ----- */
+  .stars{position:absolute;inset:0;pointer-events:none}
+  .star{
+    position:absolute;width:2px;height:2px;border-radius:50%;
+    background:#fff;opacity:.7;
+    box-shadow:0 0 6px rgba(255,255,255,.7),0 0 12px rgba(0,245,255,.4);
+    animation:twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.2;transform:scale(.8)}
+    50%{opacity:1;transform:scale(1.4)}
+  }
+
+  /* ----- Hide old bg-field grid since we now have scene-3d ----- */
+  .bg-field::before{display:none}
+
+  /* ----- Holographic conic border (animated) ----- */
+  .holo{position:relative;isolation:isolate}
+  .holo::before{
+    content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+    background:conic-gradient(from var(--ang,0deg),
+      var(--c-cyan), var(--c-purple), var(--c-pink), var(--c-mint), var(--c-cyan));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    pointer-events:none;opacity:0;transition:opacity .35s;
+    animation:holoSpin 6s linear infinite;
+  }
+  .holo:hover::before,.plan.popular::before,.holo.always::before{opacity:1}
+  @property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+  @keyframes holoSpin{to{--ang:360deg}}
+  /* ----- Plan-popular always-on holo ring ----- */
+  .plan.popular{position:relative;isolation:isolate}
+  .plan.popular::before{
+    content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+    background:conic-gradient(from var(--ang,0deg),
+      transparent 30%, var(--c-purple), var(--c-pink), var(--c-cyan), transparent 70%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    pointer-events:none;animation:holoSpin 8s linear infinite;
+  }
+
+  /* ----- Gradient text shimmer ----- */
+  .gradient{
+    background:linear-gradient(110deg,var(--c-cyan) 0%,var(--c-purple) 30%,var(--c-pink) 60%,var(--c-cyan) 100%);
+    background-size:300% 100%;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    animation:shimmer 8s linear infinite;
+  }
+  @keyframes shimmer{to{background-position:-300% 0}}
+
+  /* ----- 3D scroll reveal (override flat translateY) ----- */
+  .reveal{
+    opacity:0;
+    transform:perspective(800px) translate3d(0,30px,-60px) rotateX(8deg);
+    transition:opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.on{opacity:1;transform:perspective(800px) translate3d(0,0,0) rotateX(0)}
+
+  /* ----- Tilt-3D cards (svc, why, plan) ----- */
+  .svc,.why-card,.plan,.launch-card{
+    transform-style:preserve-3d;
+    will-change:transform;
+    transition:transform .25s ease, border-color .25s, box-shadow .25s;
+  }
+  .tilt-3d{
+    transform:
+      perspective(900px)
+      rotateY(calc(var(--rx,0) * 1deg))
+      rotateX(calc(var(--ry,0) * -1deg))
+      translateZ(0);
+  }
+  .svc:hover,.why-card:hover,.plan:hover{
+    box-shadow:
+      0 30px 60px -20px rgba(139,92,246,.35),
+      0 0 40px -5px rgba(0,245,255,.15);
+  }
+  /* lift inner content for parallax-on-card */
+  .svc-ico,.why-ico,.step-n,.plan-e{
+    transform:translateZ(30px);transition:transform .25s;
+  }
+  .svc-h,.why-t,.plan-n{transform:translateZ(18px);transition:transform .25s}
+  .svc-cat,.why-d,.svc-d,.plan-d,.plan-price{transform:translateZ(6px);transition:transform .25s}
+
+  /* ----- Browser mockup: idle 3D float ----- */
+  .browser{
+    animation:browserIdle 9s ease-in-out infinite;
+  }
+  .browser-wrap[data-tilt]:hover .browser{animation:none}
+  @keyframes browserIdle{
+    0%,100%{transform:perspective(900px) rotateY(-6deg) rotateX(2deg) translateY(0)}
+    50%{transform:perspective(900px) rotateY(6deg) rotateX(-2deg) translateY(-10px)}
+  }
+  .browser-wrap{perspective:1000px}
+
+  /* ----- 3D rotating cube near hero ----- */
+  .cube-wrap{
+    position:absolute;top:-70px;right:-40px;width:110px;height:110px;
+    perspective:600px;z-index:2;pointer-events:none;
+    filter:drop-shadow(0 10px 30px rgba(139,92,246,.6));
+  }
+  .cube{
+    position:relative;width:100%;height:100%;transform-style:preserve-3d;
+    animation:cubeSpin 14s linear infinite;
+  }
+  .cube .face{
+    position:absolute;inset:0;
+    border:1px solid rgba(255,255,255,.2);
+    background:linear-gradient(135deg,rgba(0,245,255,.12),rgba(139,92,246,.12));
+    backdrop-filter:blur(4px);
+    display:grid;place-items:center;
+    font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:32px;
+    color:#fff;
+    background-clip:padding-box;
+  }
+  .cube .face::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(0,245,255,.18),transparent 50%,rgba(247,37,133,.18));
+    pointer-events:none;
+  }
+  .cube .f1{transform:translateZ(55px);border-color:rgba(0,245,255,.55)}
+  .cube .f2{transform:rotateY(180deg) translateZ(55px);border-color:rgba(247,37,133,.55)}
+  .cube .f3{transform:rotateY(90deg) translateZ(55px);border-color:rgba(139,92,246,.55)}
+  .cube .f4{transform:rotateY(-90deg) translateZ(55px);border-color:rgba(6,255,165,.55)}
+  .cube .f5{transform:rotateX(90deg) translateZ(55px);border-color:rgba(255,209,102,.55)}
+  .cube .f6{transform:rotateX(-90deg) translateZ(55px);border-color:rgba(255,107,53,.55)}
+  @keyframes cubeSpin{
+    from{transform:rotateX(-15deg) rotateY(0)}
+    to{transform:rotateX(-15deg) rotateY(360deg)}
+  }
+  @media (max-width:980px){.cube-wrap{display:none}}
+
+  /* ----- Steps: glowing connector with traveling pulse ----- */
+  .steps::before{
+    background:linear-gradient(90deg,transparent,var(--c-cyan),var(--c-purple),var(--c-pink),transparent);
+    opacity:.55;height:2px;filter:blur(.4px);
+  }
+  .steps::after{
+    content:'';position:absolute;top:41px;left:8%;width:50px;height:4px;border-radius:99px;
+    background:linear-gradient(90deg,transparent,#fff,transparent);
+    box-shadow:0 0 16px var(--c-cyan),0 0 32px var(--c-purple);
+    animation:stepPulse 4s linear infinite;
+    filter:blur(.4px);
+  }
+  @keyframes stepPulse{
+    0%{left:8%;opacity:0}
+    8%{opacity:1}
+    92%{opacity:1}
+    100%{left:calc(92% - 50px);opacity:0}
+  }
+  .step-n{
+    transform-style:preserve-3d;
+    transition:transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .step:hover .step-n{
+    transform:rotateY(360deg) scale(1.06);
+  }
+  .step-n::before{
+    content:'';position:absolute;inset:-3px;border-radius:50%;
+    background:conic-gradient(from var(--ang,0deg),var(--c-cyan),var(--c-purple),var(--c-pink),var(--c-mint),var(--c-cyan));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;padding:3px;
+    animation:holoSpin 5s linear infinite;
+    opacity:.55;
+  }
+
+  /* ----- Float tags 3D ----- */
+  .float-tag{
+    animation:tagFloat 6s ease-in-out infinite;
+    transform-style:preserve-3d;
+  }
+  .float-tag.t1{animation-delay:0s}
+  .float-tag.t2{animation-delay:-3s}
+  @keyframes tagFloat{
+    0%,100%{transform:translateY(0) translateZ(40px) rotate(-2deg)}
+    50%{transform:translateY(-10px) translateZ(40px) rotate(2deg)}
+  }
+
+  /* ----- Marquee strip: 3D cylinder feel ----- */
+  .strip{perspective:600px;background:rgba(255,255,255,.025)}
+  .strip-inner{transform-style:preserve-3d}
+  .strip-item b{
+    text-shadow:0 0 24px rgba(0,245,255,.5);
+  }
+
+  /* ----- Brand dot 3D float ----- */
+  .brand-dot{
+    animation:brandPulse 4s ease-in-out infinite;
+    box-shadow:0 6px 30px rgba(139,92,246,.5),0 0 0 0 rgba(0,245,255,.5);
+  }
+  @keyframes brandPulse{
+    0%,100%{box-shadow:0 6px 30px rgba(139,92,246,.5),0 0 0 0 rgba(0,245,255,.5)}
+    50%{box-shadow:0 6px 30px rgba(139,92,246,.5),0 0 0 8px rgba(0,245,255,0)}
+  }
+
+  /* ----- Section glow accent ----- */
+  section{position:relative}
+  section#servizi::before,section#prezzi::before{
+    content:'';position:absolute;width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle,rgba(0,245,255,.08),transparent 70%);
+    top:50%;left:-200px;transform:translateY(-50%);pointer-events:none;z-index:-1;
+  }
+  section#perche::before{
+    content:'';position:absolute;width:600px;height:600px;border-radius:50%;
+    background:radial-gradient(circle,rgba(247,37,133,.08),transparent 70%);
+    top:50%;right:-200px;transform:translateY(-50%);pointer-events:none;z-index:-1;
+  }
+
+  /* ----- Buttons: holo on primary ----- */
+  .btn-primary{position:relative;overflow:hidden;isolation:isolate}
+  .btn-primary::after{
+    content:'';position:absolute;inset:0;border-radius:99px;
+    background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);
+    transform:translateX(-100%);transition:transform .8s;
+    pointer-events:none;
+  }
+  .btn-primary:hover::after{transform:translateX(100%)}
+
+  /* ----- Reduce motion ----- */
+  @media (prefers-reduced-motion:reduce){
+    .grid-floor,.orb,.star,.cube,.browser,.float-tag,.brand-dot,
+    .gradient,.steps::after,.holo::before,.plan.popular::before,
+    .step-n::before{animation:none!important}
+    .reveal{transform:none!important;opacity:1!important}
+  }
 </style>
 </head>
 <body>
 <div class="bg-field"></div>
+<div class="scene-3d" aria-hidden="true">
+  <div class="grid-floor top"></div>
+  <div class="grid-floor"></div>
+  <div class="orbs" id="orbs">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+    <div class="orb o4"></div>
+  </div>
+  <div class="stars" id="stars"></div>
+</div>
 
 <!-- ====== NAV ====== -->
 <header class="nav">
@@ -529,12 +838,12 @@
     </nav>
     <div class="lang-switch">
       <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
-        <span id="langFlag">🇮🇹</span><span id="langCode">IT</span> ▾
+        <span class="flag" id="langFlag" aria-hidden="true"></span><span id="langCode">IT</span> ▾
       </button>
       <div class="lang-menu" id="langMenu" role="menu">
-        <button data-lang="it" class="active"><span>🇮🇹</span> Italiano</button>
-        <button data-lang="en"><span>🇬🇧</span> English</button>
-        <button data-lang="vi"><span>🇻🇳</span> Tiếng Việt</button>
+        <button data-lang="it" class="active"><span class="flag" data-flag="it" aria-hidden="true"></span> Italiano</button>
+        <button data-lang="en"><span class="flag" data-flag="en" aria-hidden="true"></span> English</button>
+        <button data-lang="vi"><span class="flag" data-flag="vi" aria-hidden="true"></span> Tiếng Việt</button>
       </div>
     </div>
     <a href="#contatti" class="btn btn-primary nav-cta" data-i18n="nav.cta">Parliamo →</a>
@@ -562,6 +871,16 @@
     </div>
 
     <div class="reveal browser-wrap" data-tilt>
+      <div class="cube-wrap" aria-hidden="true">
+        <div class="cube">
+          <div class="face f1">Ai</div>
+          <div class="face f2">🚀</div>
+          <div class="face f3">SEO</div>
+          <div class="face f4">🤖</div>
+          <div class="face f5">VN</div>
+          <div class="face f6">EU</div>
+        </div>
+      </div>
       <div class="float-tag t1">⚡ <span data-i18n="float.t1">48h online</span></div>
       <div class="float-tag t2">🚀 <span data-i18n="float.t2">+312% traffico</span></div>
       <div class="browser">
@@ -1107,7 +1426,6 @@ const I18N = {
   }
 };
 
-const FLAGS = {it:"🇮🇹", en:"🇬🇧", vi:"🇻🇳"};
 const CODES = {it:"IT", en:"EN", vi:"VI"};
 
 function applyLang(lang){
@@ -1122,7 +1440,9 @@ function applyLang(lang){
     const k=o.getAttribute('data-i18n');
     if(dict[k]!==undefined) o.textContent = dict[k];
   });
-  document.getElementById('langFlag').textContent = FLAGS[lang];
+  const fl = document.getElementById('langFlag');
+  fl.classList.remove('it','en','vi');
+  fl.classList.add(lang);
   document.getElementById('langCode').textContent = CODES[lang];
   document.querySelectorAll('#langMenu button').forEach(b=>{
     b.classList.toggle('active', b.dataset.lang===lang);
@@ -1161,17 +1481,83 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 /* ============== Tilt on browser mockup ============== */
 const tiltEl = document.querySelector('[data-tilt] .browser');
 const tiltWrap = document.querySelector('[data-tilt]');
-if (tiltEl && tiltWrap && window.matchMedia('(hover:hover)').matches) {
+const hover = window.matchMedia('(hover:hover)').matches;
+const reduceMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+if (tiltEl && tiltWrap && hover && !reduceMotion) {
   tiltWrap.addEventListener('mousemove', (e)=>{
     const r = tiltWrap.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - 0.5;
     const y = (e.clientY - r.top) / r.height - 0.5;
-    tiltEl.style.transform = `perspective(900px) rotateY(${x*8}deg) rotateX(${-y*8}deg)`;
+    tiltEl.style.animation='none';
+    tiltEl.style.transform = `perspective(900px) rotateY(${x*12}deg) rotateX(${-y*12}deg) translateZ(0)`;
   });
   tiltWrap.addEventListener('mouseleave', ()=>{
-    tiltEl.style.transform = 'perspective(900px) rotateY(0) rotateX(0)';
+    tiltEl.style.animation='';
+    tiltEl.style.transform = '';
   });
 }
+
+/* ============== 3D tilt on cards ============== */
+function attachTilt(selector, maxDeg){
+  if (!hover || reduceMotion) return;
+  document.querySelectorAll(selector).forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width - 0.5) * maxDeg;
+      const y = ((e.clientY - r.top) / r.height - 0.5) * maxDeg;
+      card.style.setProperty('--rx', x.toFixed(2));
+      card.style.setProperty('--ry', y.toFixed(2));
+      card.classList.add('tilt-3d');
+    });
+    card.addEventListener('mouseleave', ()=>{
+      card.style.setProperty('--rx', 0);
+      card.style.setProperty('--ry', 0);
+      setTimeout(()=>card.classList.remove('tilt-3d'),300);
+    });
+  });
+}
+attachTilt('.svc', 10);
+attachTilt('.why-card', 8);
+attachTilt('.plan', 8);
+attachTilt('.launch-card', 5);
+
+/* ============== Mouse parallax for orbs ============== */
+const orbsEl = document.getElementById('orbs');
+if (orbsEl && hover && !reduceMotion){
+  let tx=0,ty=0,cx=0,cy=0;
+  window.addEventListener('mousemove', (e)=>{
+    tx = (e.clientX / window.innerWidth - 0.5) * 40;
+    ty = (e.clientY / window.innerHeight - 0.5) * 40;
+  });
+  (function loop(){
+    cx += (tx - cx) * 0.05;
+    cy += (ty - cy) * 0.05;
+    orbsEl.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* ============== Generate twinkling stars ============== */
+(function makeStars(){
+  if (reduceMotion) return;
+  const layer = document.getElementById('stars');
+  if (!layer) return;
+  const N = 60;
+  let html='';
+  for (let i=0;i<N;i++){
+    const x = Math.random()*100;
+    const y = Math.random()*100;
+    const d = (Math.random()*4).toFixed(2);
+    const s = (Math.random()*1.5 + 0.5).toFixed(2);
+    html += `<span class="star" style="left:${x}%;top:${y}%;animation-delay:${d}s;transform:scale(${s})"></span>`;
+  }
+  layer.innerHTML = html;
+})();
+
+/* ============== Smoothly fade in body on load ============== */
+document.documentElement.style.opacity = '0';
+document.documentElement.style.transition = 'opacity .6s ease';
+window.addEventListener('load', ()=>{ document.documentElement.style.opacity = '1'; });
 
 /* ============== Form ============== */
 document.getElementById('contactForm').addEventListener('submit', (e)=>{
